@@ -1,0 +1,140 @@
+#!/bin/bash
+# iptables rules script
+
+# Constants
+ WAN_IF="eth0"
+ MAN_IP="0.0.0.0/0"
+
+ PVT_IF="eth1"
+ LAN_IP="0.0.0.0/0"
+
+# Flush all current rules from iptables (ignores mangle, raw and security tables)
+ iptables -F
+ iptables -X
+ iptables -t nat -F
+ iptables -t nat -X
+
+# Create user defined tables
+ iptables -N ssh_in
+ iptables -N ssh_out
+ iptables -N dns_in
+ iptables -N dns_out
+ iptables -N dhcp_in
+ iptables -N dhcp_out
+ iptables -N http_in
+ iptables -N http_out
+ iptables -N https_in
+ iptables -N https_out
+ iptables -N ntp_in
+ iptables -N ntp_out
+ iptables -N icmp_in
+ iptables -N icmp_out
+ iptables -N salt_in
+ iptables -N logging
+
+# Set default policies for INPUT, FORWARD and OUTPUT chains
+ iptables -P INPUT DROP
+ iptables -P FORWARD DROP
+ iptables -P OUTPUT DROP
+
+# INPUT chain
+ iptables -A INPUT -i lo -j ACCEPT
+ #Act as Server
+ iptables -A INPUT -p tcp --dport 22 -j ssh_in
+ iptables -A INPUT -p tcp --dport 4505:4506 -j salt_in
+ #Act as Client
+ iptables -A INPUT -p tcp --sport 22 -j ssh_in
+ iptables -A INPUT -p tcp --sport 53 -j dns_in
+ iptables -A INPUT -p udp --sport 53 -j dns_in
+ iptables -A INPUT -p udp --sport 67:68 -j dhcp_in
+ iptables -A INPUT -p tcp --sport 80 -j http_in
+ iptables -A INPUT -p tcp --sport 443 -j https_in
+ iptables -A INPUT -p udp --sport 123 -j ntp_in
+ #ICMP
+ iptables -A INPUT -p icmp -j icmp_in
+ #Logging
+ iptables -A INPUT -j logging
+
+# OUTPUT chain
+ iptables -A OUTPUT -o lo -j ACCEPT
+ #Act as Server
+ iptables -A OUTPUT -p tcp --sport 22 -j ssh_out
+ #Act as Client
+ iptables -A OUTPUT -p tcp --dport 22 -j ssh_out
+ iptables -A OUTPUT -p tcp --dport 53 -j dns_out
+ iptables -A OUTPUT -p udp --dport 53 -j dns_out
+ iptables -A OUTPUT -p udp --dport 67:68 -j dhcp_out
+ iptables -A OUTPUT -p tcp --dport 80 -j http_out
+ iptables -A OUTPUT -p tcp --dport 443 -j https_out
+ iptables -A OUTPUT -p udp --dport 123 -j ntp_out
+ #ICMP
+ iptables -A OUTPUT -p icmp -j icmp_out
+ #Logging
+ iptables -A OUTPUT -j logging
+
+# FORWARD chain
+ iptables -A FORWARD -j logging
+
+# ssh_* chains (server & client)
+ # Only accept SSH from an external Management ip address
+ # Replace the following with management specific rules.
+ iptables -A ssh_in  -i "$WAN_IF" -s "$MAN_IP" -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+ iptables -A ssh_out -o "$WAN_IF" -d "$MAN_IP" -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+ # Only initiate SSH to ip addresses on 'private' network
+ iptables -A ssh_out -o "$PVT_IF" -d "$LAN_IP" -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+ iptables -A ssh_in  -i "$PVT_IF" -s "$LAN_IP" -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+
+# dns_* chains (client)
+ iptables -A dns_out -o "$WAN_IF" -p udp --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
+ iptables -A dns_out -o "$WAN_IF" -p tcp --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
+ iptables -A dns_in  -i "$WAN_IF" -p udp --sport 53 -m state --state ESTABLISHED -j ACCEPT
+ iptables -A dns_in  -i "$WAN_IF" -p tcp --sport 53 -m state --state ESTABLISHED -j ACCEPT
+
+# dhcp_* chains (client)
+ iptables -A dhcp_out -o "$WAN_IF" -p udp -m udp --dport 67:68 -m state --state NEW,ESTABLISHED -j ACCEPT
+ iptables -A dhcp_in  -i "$WAN_IF" -p udp -m udp --sport 67:68 -m state --state ESTABLISHED -j ACCEPT
+
+# http_* chains (client)
+ iptables -A http_out -o "$WAN_IF" -p tcp --dport 80  -m state --state NEW,ESTABLISHED -j ACCEPT
+ iptables -A http_in  -i "$WAN_IF" -p tcp --sport 80  -m state --state ESTABLISHED -j ACCEPT
+
+# https_* chains (client)
+ iptables -A https_out -o "$WAN_IF" -p tcp --dport 443 -m state --state NEW,ESTABLISHED -j ACCEPT
+ iptables -A https_in  -i "$WAN_IF" -p tcp --sport 443 -m state --state ESTABLISHED -j ACCEPT
+
+# ntp_* chains (client)
+ iptables -A ntp_out -o "$WAN_IF" -p udp --dport 123 -m state --state NEW,ESTABLISHED -j ACCEPT
+ iptables -A ntp_in  -i "$WAN_IF" -p udp --sport 123 -m state --state ESTABLISHED -j ACCEPT
+
+# icmp_* chains
+ iptables -A icmp_in  -p icmp -m icmp --icmp-type 0 -j ACCEPT
+ iptables -A icmp_in  -p icmp -m icmp --icmp-type 3 -j ACCEPT
+ iptables -A icmp_in  -p icmp -m icmp --icmp-type 8 -j ACCEPT
+ iptables -A icmp_in  -p icmp -m icmp --icmp-type 11 -j ACCEPT
+ iptables -A icmp_in  -p icmp -m icmp --icmp-type 12 -j ACCEPT
+ iptables -A icmp_out -p icmp -m icmp --icmp-type 8 -j ACCEPT
+
+# salt_in chain
+ # Only accept salt minion packets on private network
+ # Minion specific rules should be added as minions are created
+ # eg:
+ #iptables -A salt_in -i "$PVT_IF" -s 123.456.78.9/32 -j ACCEPT
+ iptables -A salt_in -i "$PVT_IF" -s "$LAN_IP" -j ACCEPT
+
+# logging chain
+ #Skip these
+ iptables -A icmp_in -j DROP
+ iptables -A INPUT -m state --state INVALID -j DROP
+ #Log all else
+ iptables -A logging -m limit --limit 2/min --limit-burst 10 \
+          -j LOG --log-prefix "IPTables-Dropped: " --log-level 4
+
+# Save settings
+ /sbin/service iptables save
+
+# List rules
+ printf "\n\nFILTER table\n"
+ iptables -L -v --line-numbers
+ printf "\n\nNAT table\n"
+ iptables -t nat -L -v --line-numbers
+EOF
