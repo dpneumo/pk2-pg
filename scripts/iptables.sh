@@ -7,7 +7,7 @@ yum install -y iptables-services
 
 # Create iptables rules script
 # Copy iptables_rules to /home/loco/iptables_mod.sh
-bash -c "cat config/data/iptables_rules >> /home/loco/iptables_mod.sh ;"
+bash -c "cat ./data/iptables_rules >> /home/loco/iptables_mod.sh ;"
 
 # Set permissions on iptables_mod.sh & execute it
 chown loco:loco /home/loco/iptables_mod.sh
