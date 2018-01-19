@@ -24,6 +24,10 @@ SSH to root@<server-ipaddress>
     yum -y update &&
     yum install -y git
 
+    git config --global user.email "you@example.com"
+    git config --global user.name "Your Name"
+    git config --global push.default simple
+
     cd /opt &&
     git clone https://github.com/dpneumo/pk2-pg.git
 

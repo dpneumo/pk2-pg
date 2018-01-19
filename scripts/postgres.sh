@@ -9,4 +9,6 @@ sudo systemctl start postgresql
 sudo systemctl enable postgresql
 
 sudo -i -u postgres
-createuser --createdb --no-login --nocreaterole --no-superuser
+createuser --createdb --no-login --no-createrole --no-superuser
+
+exit
