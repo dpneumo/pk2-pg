@@ -18,7 +18,7 @@ echo "Added user loco"
 # Set appropriate ownership and permissions - ssh is picky!
 mkdir -p /home/loco/.ssh
 touch /home/loco/.ssh/authorized_keys
-cat config/data/loco_pubkey >> /home/loco/.ssh/authorized_keys
+cat data/loco_pubkey >> /home/loco/.ssh/authorized_keys
 chmod 700 /home/loco/.ssh
 chmod 600 /home/loco/.ssh/authorized_keys
 chown loco:loco /home/loco/.ssh -R
