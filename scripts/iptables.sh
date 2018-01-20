@@ -14,14 +14,18 @@ cp ./data/iptables_rules /home/loco/iptables_mod.sh
 chown loco:loco /home/loco/iptables_mod.sh
 chmod +x /home/loco/iptables_mod.sh
 . /home/loco/iptables_mod.sh
+echo "iptables_mod.sh has been created."
 
 # Save the modified iptables rules for use on restart
 iptables-save
+echo "iptables modified rules have been saved."
 
 # Stop & hide firewalld. Start iptables
 systemctl stop firewalld && systemctl start iptables
+echo "iptables has been started."
 systemctl mask firewalld
 systemctl enable iptables
+echo "iptables start at boot has been enabled."
 
 # Log iptables to its own log file
 #bash -c "cat <<'EOF' > /etc/rsyslog.d/20-iptables.conf;
