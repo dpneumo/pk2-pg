@@ -21,6 +21,7 @@
  iptables -N lan_out
 
  iptables -N ssh_in
+ iptables -N ssh_out
 
  iptables -N dns_in
  iptables -N dns_out
@@ -71,7 +72,7 @@
 
  # WAN Out chain ###########################
  # Server
- iptables -A wan_out -m state --state ESTABLISHED -j ACCEPT
+ iptables -A wan_out -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
  # Client
  iptables -A wan_out -p tcp --dport 53 -j dns_out
  iptables -A wan_out -p udp --dport 53 -j dns_out
@@ -98,6 +99,7 @@
  # Only accept SSH from an external Management ip address
  # Replace the following with management specific rules.
  iptables -A ssh_in  -s "$MAN_IP" -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+ iptables -A ssh_out -d "$MAN_IP" -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
 
 # dns_* chains (client)
  iptables -A dns_out -p udp --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
