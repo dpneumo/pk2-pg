@@ -28,7 +28,7 @@ echo "SSH setup for loco"
 if [ ! -f /etc/ssh/sshd_config.orig ]
   then mv /etc/ssh/sshd_config  /etc/ssh/sshd_config.orig
 fi
-cat config/data/sshd_config > /etc/ssh/sshd_config
+cat data/sshd_config > /etc/ssh/sshd_config
 echo "Updated sshd configuration"
 
 # Restart sshd and enable start on boot
