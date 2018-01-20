@@ -28,16 +28,16 @@
  iptables -P OUTPUT DROP
 
 # INPUT chain ##############################
- iptables -A INPUT -i lo      -j ACCEPT
- iptables -A INPUT -i LAN_IF  -j lan_in
- iptables -A INPUT -i WAN_IF  -j wan_in
- iptables -A INPUT            -j DROP
+ iptables -A INPUT -i lo       -j ACCEPT
+ iptables -A INPUT -i $LAN_IF  -j lan_in
+ iptables -A INPUT -i $WAN_IF  -j wan_in
+ iptables -A INPUT             -j DROP
 
 # OUTPUT chain ##############################
- iptables -A OUTPUT -o lo     -j ACCEPT
- iptables -A OUTPUT -o LAN_IF -j lan_out
- iptables -A OUTPUT -o WAN_IF -j wan_out
- iptables -A OUTPUT           -j DROP
+ iptables -A OUTPUT -o lo      -j ACCEPT
+ iptables -A OUTPUT -o $LAN_IF -j lan_out
+ iptables -A OUTPUT -o $WAN_IF -j wan_out
+ iptables -A OUTPUT            -j DROP
 
  # FORWARD chain ############################
  iptables -A FORWARD -j logging

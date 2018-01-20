@@ -38,7 +38,7 @@ SSH to root@<server-ipaddress>
     git commit -m "make our scripts executable and tell git about it"
     git push
 
-    ./config_server.sh
+    ./config_server.sh  # Will ask for new password for user 'loco'
 
     exit
 

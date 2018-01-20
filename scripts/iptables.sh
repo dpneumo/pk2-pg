@@ -4,16 +4,18 @@ yum update -y
 
 # Install iptables
 yum install -y iptables-services
+echo "Installed iptables"
 
 # Create iptables rules script
 # Copy iptables_rules to /home/loco/iptables_mod.sh
 bash -c "cat ./data/iptables_rules >> /home/loco/iptables_mod.sh ;"
+echo "Created iptables_mod.sh"
 
 # Set permissions on iptables_mod.sh & execute it
 chown loco:loco /home/loco/iptables_mod.sh
 chmod +x /home/loco/iptables_mod.sh
 . /home/loco/iptables_mod.sh
-echo "iptables_mod.sh has been created."
+echo "Executed iptables_mod.sh."
 
 # Save the modified iptables rules for use on restart
 iptables-save
@@ -31,6 +33,7 @@ bash -c "cat <<'EOF' > /etc/rsyslog.d/20-iptables.conf;
 :msg, startswith, 'IPTables-Dropped: '' -/var/log/iptables.log
 & ~
 EOF"
+echo "Set iptables to log to iptables.log"
 
 # Rotate the iptables log
 bash -c "cat <<'EOF' > /etc/logrotate.d/iptables;
@@ -47,3 +50,4 @@ bash -c "cat <<'EOF' > /etc/logrotate.d/iptables;
   endscript
 }
 EOF"
+echo "Rotation of iptables log set up"
