@@ -21,8 +21,13 @@ echo "Executed iptables_mod.sh."
 iptables-save
 echo "iptables modified rules have been saved."
 
-# Stop & hide firewalld. Start iptables
-systemctl stop firewalld && systemctl start iptables
+# Stop & hide firewalld
+systemctl is-active --quiet firewalld &&
+systemctl stop firewalld
+echo "Stopped firewalld"
+
+# Start iptables
+systemctl start iptables
 echo "iptables has been started."
 systemctl mask firewalld
 systemctl enable iptables
