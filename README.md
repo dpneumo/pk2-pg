@@ -49,6 +49,14 @@ SSH to loco@<server-ipaddress>
     sudo ./scripts/postgres.sh
     sudo ./scripts/iptables.sh
 
+#### login to postgres as user postgres
+
+    sudo -i -u postgres
+
+#### TO DO:
+
+  * Establish backup/replication strategies.
+
 ### config_server.sh
 
 This script does the initial setup of the server.
