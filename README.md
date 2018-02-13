@@ -57,7 +57,11 @@ SSH to loco@<server-ipaddress>
 
 #### login to postgres as user postgres
 
+    # superuser:
     sudo -i -u postgres
+
+    # regular user: can add roles and create dbs
+    sudo -i -u mitch
 
 #### TO DO:
 
