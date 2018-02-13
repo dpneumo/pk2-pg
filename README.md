@@ -44,7 +44,13 @@ SSH to root@<server-ipaddress>
 
 SSH to loco@<server-ipaddress>
 
+    sudo chown -R loco /opt/pkg2-pg    
+
     cd /opt/pk2-pg
+
+    git config --global user.email "you@example.com"
+    git config --global user.name "Your Name"
+    git config --global push.default simple
 
     sudo ./scripts/postgres.sh
     sudo ./scripts/iptables.sh
