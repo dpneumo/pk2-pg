@@ -8,10 +8,10 @@ yum -y install https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x8
 echo "Installed PGDB RPM file"
 
 yum -y install postgresql10-server.x86_64 postgresql10-contrib.x86_64
-postgresql-setup initdb
+/usr/pgsql-10.0/bin/postgresql-10-setup initdb
 echo "Installed postgresql"
 
-cp data/pg_hba.conf /var/lib/pgsql/data/pg_hba.conf
+cp data/pg_hba.conf /var/lib/pgsql/10/data/pg_hba.conf
 echo "Installed our pg_hba.conf"
 
 systemctl start postgresql
