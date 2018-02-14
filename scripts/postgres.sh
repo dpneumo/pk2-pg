@@ -12,5 +12,8 @@ systemctl start postgresql
 systemctl enable postgresql
 echo "Started and boot enabled postgresql"
 
+sudo -u postgres createuser --createdb --createrole --no-superuser "mitch"
+echo "Created postgres user 'mitch'"
+
 sudo -u postgres createuser --createdb --no-login --no-createrole --no-superuser "minerva"
 echo "Created postgres user 'minerva'"

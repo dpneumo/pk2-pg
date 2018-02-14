@@ -40,11 +40,12 @@ SSH to root@<server-ipaddress>
 
     ./config_server.sh  # Will ask for new password for user 'loco'
 
+    cd ..
+    chown -R loco:loco pk2-pg
+
     exit
 
 SSH to loco@<server-ipaddress>
-
-    sudo chown -R loco /opt/pkg2-pg    
 
     cd /opt/pk2-pg
 
@@ -55,7 +56,7 @@ SSH to loco@<server-ipaddress>
     sudo ./scripts/postgres.sh
     sudo ./scripts/iptables.sh
 
-#### login to postgres as user postgres
+#### postgres login users
 
     # superuser:
     sudo -i -u postgres
