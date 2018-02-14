@@ -1,7 +1,13 @@
 ################# postgresql #################
 yum update -y
 
-yum -y install postgresql-server postgresql-contrib
+cp data/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo
+echo "Installed our CentOS-Base.repo additions for PG"
+
+yum -y install https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/pgdg-centos10-10-2.noarch.rpm
+echo "Installed PGDB RPM file"
+
+yum -y install postgresql10-server.x86_64 postgresql10-contrib.x86_64
 postgresql-setup initdb
 echo "Installed postgresql"
 
