@@ -1,3 +1,13 @@
+#!/bin/bash
+
+# Add HTTP & HTTPS Client rules - temporary for yum & git
+sh -c "
+  iptables -A wan_in  -p tcp --sport 80  -m state --state ESTABLISHED     -j ACCEPT;
+  iptables -A wan_out -p tcp --dport 80  -m state --state NEW,ESTABLISHED -j ACCEPT;
+  iptables -A wan_in  -p tcp --sport 443 -m state --state ESTABLISHED     -j ACCEPT;
+  iptables -A wan_out -p tcp --dport 443 -m state --state NEW,ESTABLISHED -j ACCEPT;
+  /sbin/service iptables save;"
+
 ################# postgresql #################
 yum update -y
 
@@ -24,3 +34,12 @@ echo "Created postgres user 'mitch'"
 
 sudo -u postgres createuser --createdb --no-login --no-createrole --no-superuser "minerva"
 echo "Created postgres user 'minerva'"
+
+
+# Remove HTTP & HTTPS Client rules
+sh -c "
+  iptables -D wan_in  -p tcp --sport 80  -m state --state ESTABLISHED     -j ACCEPT;
+  iptables -D wan_out -p tcp --dport 80  -m state --state NEW,ESTABLISHED -j ACCEPT;
+  iptables -D wan_in  -p tcp --sport 443 -m state --state ESTABLISHED     -j ACCEPT;
+  iptables -D wan_out -p tcp --dport 443 -m state --state NEW,ESTABLISHED -j ACCEPT;
+  /sbin/service iptables save"
