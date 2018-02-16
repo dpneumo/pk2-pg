@@ -20,9 +20,8 @@ echo "Installed PGDB RPM file"
 if [ -f "/usr/pgsql-10/bin/postgresql-10-setup" ]; then
   echo "Postgresql server is already installed."
 else
-  echo "Installing Postgresql server."
-  #yum -y install postgresql10-server.x86_64 postgresql10-contrib.x86_64
-  #/usr/pgsql-10/bin/postgresql-10-setup initdb
+  yum -y install postgresql10-server.x86_64 postgresql10-contrib.x86_64
+  /usr/pgsql-10/bin/postgresql-10-setup initdb
   echo "Installed postgresql"
 fi
 

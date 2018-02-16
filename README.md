@@ -53,8 +53,8 @@ SSH to loco@<server-ipaddress>
     git config --global user.name "Your Name"
     git config --global push.default simple
 
-    sudo ./scripts/postgres.sh
     sudo ./scripts/iptables.sh
+    sudo ./scripts/postgres.sh
 
 #### postgres login users
 
