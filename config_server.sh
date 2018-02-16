@@ -14,6 +14,10 @@ passwd loco
 usermod -aG wheel loco
 echo "Added user loco"
 
+# Create user: mitch (for non superuser access to postgresql)
+useradd mitch
+passwd mitch
+
 # Setup ssh for loco
 # Set appropriate ownership and permissions - ssh is picky!
 mkdir -p /home/loco/.ssh

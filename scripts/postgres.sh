@@ -39,6 +39,11 @@ echo "Created postgres user 'mitch'"
 sudo -u postgres createuser --createdb --no-login --no-createrole --no-superuser "minerva"
 echo "Created postgres user 'minerva'"
 
+sudo -i -u mitch
+createdb
+exit
+echo "Mitch can now use psql"
+
 
 # Remove HTTP & HTTPS Client rules
 sh -c "
