@@ -17,9 +17,14 @@ echo "Installed our CentOS-Base.repo additions for PG"
 yum -y install https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/pgdg-centos10-10-2.noarch.rpm
 echo "Installed PGDB RPM file"
 
-yum -y install postgresql10-server.x86_64 postgresql10-contrib.x86_64
-/usr/pgsql-10/bin/postgresql-10-setup initdb
-echo "Installed postgresql"
+if [ -f "/usr/pgsql-10/bin/postgresql-10-setup" ]; then
+  echo "Postgresql server is already installed."
+else
+  echo "Installing Postgresql server."
+  #yum -y install postgresql10-server.x86_64 postgresql10-contrib.x86_64
+  #/usr/pgsql-10/bin/postgresql-10-setup initdb
+  echo "Installed postgresql"
+fi
 
 cp data/pg_hba.conf /var/lib/pgsql/10/data/pg_hba.conf
 chown postgres:postgres /var/lib/pgsql/10/data/pg_hba.conf
