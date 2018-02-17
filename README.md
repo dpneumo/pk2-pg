@@ -67,6 +67,10 @@ SSH to loco@<server-ipaddress>
 #### TO DO:
 
   * Establish backup/replication strategies.
+  * Change /var/lib/pgsql/10/data/postgresql.conf to listen on *
+  * Whenever the client or server internal addresses change,
+      MUST change firewall and pg_hba.conf to match
+
 
 ### config_server.sh
 

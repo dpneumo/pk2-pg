@@ -36,7 +36,7 @@ echo "Started and boot enabled postgresql"
 sudo -u postgres createuser --createdb --createrole --no-superuser "mitch"
 echo "Created postgres user 'mitch'"
 
-sudo -u postgres createuser --createdb --no-login --no-createrole --no-superuser "minerva"
+sudo -u postgres createuser --createdb --no-createrole --no-superuser "minerva"
 echo "Created postgres user 'minerva'"
 
 sudo -i -u mitch
