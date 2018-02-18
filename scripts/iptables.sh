@@ -15,7 +15,7 @@ echo "Installed iptables"
 
 # Create iptables rules script
 # Copy iptables_rules to /home/loco/iptables_mod.sh
-bash -c "cat ./data/iptables_rules >> /home/loco/iptables_mod.sh ;"
+bash -c "cat ./data/iptables_rules > /home/loco/iptables_mod.sh ;"
 echo "Created iptables_mod.sh"
 
 # Set permissions on iptables_mod.sh & execute it
