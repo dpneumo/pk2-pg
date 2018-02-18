@@ -1,4 +1,11 @@
+#!/bin/bash
+
 ################# iptables #################
+# Stop firewall(s)
+systemctl is-active --quiet firewalld && systemctl stop firewalld
+systemctl is-active --quiet iptables && systemctl stop iptables
+echo "Stopped firewall (firewalld or iptables)"
+
 # Setup for iptables install
 yum update -y
 
@@ -20,11 +27,6 @@ echo "Executed iptables_mod.sh."
 # Save the modified iptables rules for use on restart
 iptables-save
 echo "iptables modified rules have been saved."
-
-# Stop & hide firewalld
-systemctl is-active --quiet firewalld &&
-systemctl stop firewalld
-echo "Stopped firewalld"
 
 # Start iptables
 systemctl start iptables
